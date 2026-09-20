@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../home/home_screen.dart';
+import '../../services/nutrition_calculator.dart';
 
 class QuestionnaireScreen extends StatefulWidget {
   const QuestionnaireScreen({super.key});
@@ -147,6 +148,23 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
       return;
     }
 
+    // Get questionnaire values
+    final int? age = int.tryParse(_ageController.text.trim());
+
+    final double? height = double.tryParse(_heightController.text.trim());
+
+    final double? weight = double.tryParse(_weightController.text.trim());
+
+    // Calculate personalized nutrition targets
+    final nutrition = NutritionCalculator.calculate(
+      age: age!,
+      height: height!,
+      weight: weight!,
+      gender: _gender!,
+      activityLevel: _activityLevel!,
+      goal: _goal!,
+    );
+
     // Show loading dialog
     showDialog(
       context: context,
@@ -156,9 +174,10 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
 
     try {
       await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-        'age': int.tryParse(_ageController.text.trim()),
-        'height': double.tryParse(_heightController.text.trim()),
-        'weight': double.tryParse(_weightController.text.trim()),
+        // Questionnaire information
+        'age': age,
+        'height': height,
+        'weight': weight,
         'gender': _gender,
         'activityLevel': _activityLevel,
         'goal': _goal,
@@ -166,14 +185,26 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
         'allergies': _allergiesController.text.trim().isEmpty
             ? 'None'
             : _allergiesController.text.trim(),
+
+        // Personalized nutrition calculations
+        'bmr': nutrition.bmr,
+        'tdee': nutrition.tdee,
+        'dailyCalories': nutrition.dailyCalories,
+        'protein': nutrition.protein,
+        'carbohydrates': nutrition.carbohydrates,
+        'fats': nutrition.fats,
+
+        // Questionnaire status
         'questionnaireCompleted': true,
         'questionnaireCompletedAt': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
 
       if (!mounted) return;
 
-      Navigator.of(context).pop(); // Close loading dialog
+      // Close loading dialog
+      Navigator.of(context).pop();
 
+      // Go to dashboard
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (_) => const HomeScreen()),
@@ -182,7 +213,8 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
     } catch (e) {
       if (!mounted) return;
 
-      Navigator.of(context).pop(); // Close loading dialog
+      // Close loading dialog
+      Navigator.of(context).pop();
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Could not save your information: $e')),
