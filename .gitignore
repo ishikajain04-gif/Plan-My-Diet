@@ -54,3 +54,4 @@ GoogleService-Info*.plist
 
 # Android local configuration
 android/local.properties
+android/ .kotlin/
