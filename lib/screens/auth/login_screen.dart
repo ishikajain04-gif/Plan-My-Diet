@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../main/main_navigation_screen.dart';
 
-import '../home/home_screen.dart';
 import '../questionnaire/questionnaire_screen.dart';
 import 'signup_screen.dart';
 
@@ -98,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (questionnaireCompleted) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
+          MaterialPageRoute(builder: (context) => const MainNavigationScreen()),
         );
       } else {
         Navigator.pushReplacement(

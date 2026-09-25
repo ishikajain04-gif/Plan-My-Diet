@@ -319,53 +319,11 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ),
       ),
-
-      // ================================================================
-      // BOTTOM NAVIGATION
-      // ================================================================
-      bottomNavigationBar: SafeArea(
-        child: Container(
-          margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-          height: 70,
-          decoration: BoxDecoration(
-            color: const Color(0xFF193A26),
-            borderRadius: BorderRadius.circular(26),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.15),
-                blurRadius: 20,
-                offset: const Offset(0, 7),
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _navigationItem(
-                icon: Icons.home_rounded,
-                label: 'Home',
-                index: 0,
-              ),
-              _navigationItem(
-                icon: Icons.restaurant_menu_rounded,
-                label: 'Meals',
-                index: 1,
-              ),
-              _navigationItem(
-                icon: Icons.bar_chart_rounded,
-                label: 'Progress',
-                index: 2,
-              ),
-              _navigationItem(
-                icon: Icons.auto_awesome_rounded,
-                label: 'AI',
-                index: 3,
-              ),
-            ],
-          ),
-        ),
-      ),
     );
+
+    // ================================================================
+    // BOTTOM NAVIGATION
+    // ============================================================
   }
 
   // ====================================================================
@@ -889,62 +847,6 @@ class _HomeScreenState extends State<HomeScreen> {
             style: const TextStyle(fontSize: 10, color: Colors.black54),
           ),
         ],
-      ),
-    );
-  }
-
-  // ====================================================================
-  // BOTTOM NAVIGATION
-  // ====================================================================
-
-  Widget _navigationItem({
-    required IconData icon,
-    required String label,
-    required int index,
-  }) {
-    final bool active = selectedIndex == index;
-
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedIndex = index;
-        });
-
-        if (index != 0) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('$label section coming soon'),
-              duration: const Duration(milliseconds: 900),
-            ),
-          );
-        }
-      },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 220),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: active ? const Color(0xFFDCEBC5) : Colors.transparent,
-          borderRadius: BorderRadius.circular(18),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              icon,
-              size: 21,
-              color: active ? const Color(0xFF193A26) : Colors.white70,
-            ),
-            const SizedBox(height: 2),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 9,
-                fontWeight: FontWeight.w700,
-                color: active ? const Color(0xFF193A26) : Colors.white70,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import '../home/home_screen.dart';
+import '../main/main_navigation_screen.dart';
 import '../../services/nutrition_calculator.dart';
 
 class QuestionnaireScreen extends StatefulWidget {
@@ -207,7 +206,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
       // Go to dashboard
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
+        MaterialPageRoute(builder: (_) => const MainNavigationScreen()),
         (route) => false,
       );
     } catch (e) {
@@ -310,69 +309,900 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
     );
   }
 
+  Widget _genderOption({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required String value,
+  }) {
+    final bool selected = _gender == value;
+
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _gender = value;
+        });
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 220),
+        width: double.infinity,
+        padding: const EdgeInsets.all(17),
+        decoration: BoxDecoration(
+          color: selected ? const Color(0xFFE8EFE0) : Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: selected ? const Color(0xFF27613C) : const Color(0xFFE5E3DA),
+            width: selected ? 1.6 : 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: selected ? 0.06 : 0.025),
+              blurRadius: 14,
+              offset: const Offset(0, 5),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            // Icon
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 220),
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: selected
+                    ? const Color(0xFF27613C)
+                    : const Color(0xFFE8EFE0),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Icon(
+                icon,
+                color: selected ? Colors.white : const Color(0xFF27613C),
+                size: 23,
+              ),
+            ),
+
+            const SizedBox(width: 15),
+
+            // Text
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: Color(0xFF193A26),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Colors.grey.shade600,
+                      fontSize: 12,
+                      height: 1.35,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(width: 10),
+
+            // Selection indicator
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 220),
+              width: 25,
+              height: 25,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: selected ? const Color(0xFF27613C) : Colors.transparent,
+                border: Border.all(
+                  color: selected
+                      ? const Color(0xFF27613C)
+                      : const Color(0xFFD5D5D0),
+                  width: 1.5,
+                ),
+              ),
+              child: selected
+                  ? const Icon(
+                      Icons.check_rounded,
+                      color: Colors.white,
+                      size: 16,
+                    )
+                  : null,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _activityOption({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required String value,
+  }) {
+    final bool selected = _activityLevel == value;
+
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _activityLevel = value;
+        });
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 220),
+        width: double.infinity,
+        padding: const EdgeInsets.all(17),
+        decoration: BoxDecoration(
+          color: selected ? const Color(0xFFE8EFE0) : Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: selected ? const Color(0xFF27613C) : const Color(0xFFE5E3DA),
+            width: selected ? 1.6 : 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: selected ? 0.06 : 0.025),
+              blurRadius: 14,
+              offset: const Offset(0, 5),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 220),
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: selected
+                    ? const Color(0xFF27613C)
+                    : const Color(0xFFE8EFE0),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Icon(
+                icon,
+                color: selected ? Colors.white : const Color(0xFF27613C),
+                size: 23,
+              ),
+            ),
+
+            const SizedBox(width: 15),
+
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: Color(0xFF193A26),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Colors.grey.shade600,
+                      fontSize: 12,
+                      height: 1.35,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(width: 10),
+
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 220),
+              width: 25,
+              height: 25,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: selected ? const Color(0xFF27613C) : Colors.transparent,
+                border: Border.all(
+                  color: selected
+                      ? const Color(0xFF27613C)
+                      : const Color(0xFFD5D5D0),
+                  width: 1.5,
+                ),
+              ),
+              child: selected
+                  ? const Icon(
+                      Icons.check_rounded,
+                      color: Colors.white,
+                      size: 16,
+                    )
+                  : null,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _goalOption({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required String value,
+  }) {
+    final bool selected = _goal == value;
+
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _goal = value;
+        });
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 220),
+        width: double.infinity,
+        padding: const EdgeInsets.all(17),
+        decoration: BoxDecoration(
+          color: selected ? const Color(0xFFE8EFE0) : Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: selected ? const Color(0xFF27613C) : const Color(0xFFE5E3DA),
+            width: selected ? 1.6 : 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: selected ? 0.06 : 0.025),
+              blurRadius: 14,
+              offset: const Offset(0, 5),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 220),
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: selected
+                    ? const Color(0xFF27613C)
+                    : const Color(0xFFE8EFE0),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Icon(
+                icon,
+                color: selected ? Colors.white : const Color(0xFF27613C),
+                size: 23,
+              ),
+            ),
+
+            const SizedBox(width: 15),
+
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: Color(0xFF193A26),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Colors.grey.shade600,
+                      fontSize: 12,
+                      height: 1.35,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(width: 10),
+
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 220),
+              width: 25,
+              height: 25,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: selected ? const Color(0xFF27613C) : Colors.transparent,
+                border: Border.all(
+                  color: selected
+                      ? const Color(0xFF27613C)
+                      : const Color(0xFFD5D5D0),
+                  width: 1.5,
+                ),
+              ),
+              child: selected
+                  ? const Icon(
+                      Icons.check_rounded,
+                      color: Colors.white,
+                      size: 16,
+                    )
+                  : null,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _dietOption({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required String value,
+  }) {
+    final bool selected = _dietPreference == value;
+
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _dietPreference = value;
+        });
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 220),
+        width: double.infinity,
+        padding: const EdgeInsets.all(17),
+        decoration: BoxDecoration(
+          color: selected ? const Color(0xFFE8EFE0) : Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: selected ? const Color(0xFF27613C) : const Color(0xFFE5E3DA),
+            width: selected ? 1.6 : 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: selected ? 0.06 : 0.025),
+              blurRadius: 14,
+              offset: const Offset(0, 5),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 220),
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: selected
+                    ? const Color(0xFF27613C)
+                    : const Color(0xFFE8EFE0),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Icon(
+                icon,
+                color: selected ? Colors.white : const Color(0xFF27613C),
+                size: 23,
+              ),
+            ),
+
+            const SizedBox(width: 15),
+
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: Color(0xFF193A26),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Colors.grey.shade600,
+                      fontSize: 12,
+                      height: 1.35,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(width: 10),
+
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 220),
+              width: 25,
+              height: 25,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: selected ? const Color(0xFF27613C) : Colors.transparent,
+                border: Border.all(
+                  color: selected
+                      ? const Color(0xFF27613C)
+                      : const Color(0xFFD5D5D0),
+                  width: 1.5,
+                ),
+              ),
+              child: selected
+                  ? const Icon(
+                      Icons.check_rounded,
+                      color: Colors.white,
+                      size: 16,
+                    )
+                  : null,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildQuestion(int index) {
     switch (index) {
       case 0:
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _questionTitle(
-              title: "What's your age?",
-              subtitle: 'Your age helps us personalize your nutrition plan.',
+            // Small section label
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+              decoration: BoxDecoration(
+                color: const Color(0xFFE8EFE0),
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: const Text(
+                'STEP 1 OF 8',
+                style: TextStyle(
+                  color: Color(0xFF27613C),
+                  fontSize: 11,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 1.1,
+                ),
+              ),
             ),
-            _textField(
-              controller: _ageController,
-              hintText: 'Enter your age',
-              keyboardType: TextInputType.number,
+
+            const SizedBox(height: 22),
+
+            const Text(
+              "Let's get to know you",
+              style: TextStyle(
+                color: Color(0xFF193A26),
+                fontSize: 32,
+                fontWeight: FontWeight.w800,
+                height: 1.15,
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
+            Text(
+              'A few basic details will help us create '
+              'a nutrition plan that feels personal to you.',
+              style: TextStyle(
+                color: Colors.grey.shade600,
+                fontSize: 15,
+                height: 1.5,
+              ),
+            ),
+
+            const SizedBox(height: 34),
+
+            // Age card
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(22),
+                border: Border.all(color: const Color(0xFFE5E3DA)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.04),
+                    blurRadius: 18,
+                    offset: const Offset(0, 7),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Row(
+                    children: [
+                      Icon(
+                        Icons.cake_outlined,
+                        color: Color(0xFF27613C),
+                        size: 22,
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        'Your age',
+                        style: TextStyle(
+                          color: Color(0xFF193A26),
+                          fontSize: 17,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  Text(
+                    'This helps us estimate your daily nutrition needs.',
+                    style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
+                  ),
+
+                  const SizedBox(height: 18),
+
+                  TextField(
+                    controller: _ageController,
+                    keyboardType: TextInputType.number,
+                    style: const TextStyle(
+                      color: Color(0xFF193A26),
+                      fontSize: 22,
+                      fontWeight: FontWeight.w700,
+                    ),
+                    decoration: InputDecoration(
+                      hintText: 'Enter your age',
+                      hintStyle: TextStyle(
+                        color: Colors.grey.shade400,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      suffixText: 'years',
+                      suffixStyle: const TextStyle(
+                        color: Color(0xFF777777),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      filled: true,
+                      fillColor: const Color(0xFFF8F7F1),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 17,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: BorderSide.none,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: BorderSide.none,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: const BorderSide(
+                          color: Color(0xFF27613C),
+                          width: 1.5,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 18),
+
+            // Privacy/support note
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: const Color(0xFFE8EFE0).withValues(alpha: 0.65),
+                borderRadius: BorderRadius.circular(17),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(
+                    Icons.lock_outline_rounded,
+                    color: Color(0xFF27613C),
+                    size: 20,
+                  ),
+                  const SizedBox(width: 11),
+                  Expanded(
+                    child: Text(
+                      'Your information is used only to personalize '
+                      'your Plan My Diet experience.',
+                      style: TextStyle(
+                        color: Colors.grey.shade700,
+                        fontSize: 12.5,
+                        height: 1.4,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         );
-
       case 1:
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _questionTitle(
-              title: "What's your gender?",
-              subtitle:
-                  'This helps us make more accurate nutrition calculations.',
+            // Step label
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+              decoration: BoxDecoration(
+                color: const Color(0xFFE8EFE0),
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: const Text(
+                'STEP 2 OF 8',
+                style: TextStyle(
+                  color: Color(0xFF27613C),
+                  fontSize: 11,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 1.1,
+                ),
+              ),
             ),
-            _optionButton(
+
+            const SizedBox(height: 22),
+
+            const Text(
+              'How should we personalize your plan?',
+              style: TextStyle(
+                color: Color(0xFF193A26),
+                fontSize: 31,
+                fontWeight: FontWeight.w800,
+                height: 1.15,
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
+            Text(
+              'This information helps us make your nutrition '
+              'calculations more personalized.',
+              style: TextStyle(
+                color: Colors.grey.shade600,
+                fontSize: 15,
+                height: 1.5,
+              ),
+            ),
+
+            const SizedBox(height: 30),
+
+            // Gender options
+            _genderOption(
+              icon: Icons.male_rounded,
               title: 'Male',
-              selected: _gender == 'Male',
-              onTap: () => setState(() => _gender = 'Male'),
+              subtitle: 'Personalize using male nutrition estimates',
+              value: 'Male',
             ),
-            _optionButton(
+
+            const SizedBox(height: 12),
+
+            _genderOption(
+              icon: Icons.female_rounded,
               title: 'Female',
-              selected: _gender == 'Female',
-              onTap: () => setState(() => _gender = 'Female'),
+              subtitle: 'Personalize using female nutrition estimates',
+              value: 'Female',
             ),
-            _optionButton(
+
+            const SizedBox(height: 12),
+
+            _genderOption(
+              icon: Icons.transgender_rounded,
               title: 'Other',
-              selected: _gender == 'Other',
-              onTap: () => setState(() => _gender = 'Other'),
+              subtitle: 'Choose another gender identity',
+              value: 'Other',
             ),
-            _optionButton(
+
+            const SizedBox(height: 12),
+
+            _genderOption(
+              icon: Icons.favorite_border_rounded,
               title: 'Prefer not to say',
-              selected: _gender == 'Prefer not to say',
-              onTap: () => setState(() => _gender = 'Prefer not to say'),
+              subtitle: 'You can keep this information private',
+              value: 'Prefer not to say',
             ),
           ],
         );
-
       case 2:
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _questionTitle(
-              title: "What's your height?",
-              subtitle: 'Enter your height in centimeters.',
+            // Step label
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+              decoration: BoxDecoration(
+                color: const Color(0xFFE8EFE0),
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: const Text(
+                'STEP 3 OF 8',
+                style: TextStyle(
+                  color: Color(0xFF27613C),
+                  fontSize: 11,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 1.1,
+                ),
+              ),
             ),
-            _textField(
-              controller: _heightController,
-              hintText: 'Height in cm',
-              keyboardType: const TextInputType.numberWithOptions(
-                decimal: true,
+
+            const SizedBox(height: 22),
+
+            const Text(
+              "What's your height?",
+              style: TextStyle(
+                color: Color(0xFF193A26),
+                fontSize: 32,
+                fontWeight: FontWeight.w800,
+                height: 1.15,
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
+            Text(
+              'Your height helps us understand your body '
+              'measurements and calculate your nutrition needs.',
+              style: TextStyle(
+                color: Colors.grey.shade600,
+                fontSize: 15,
+                height: 1.5,
+              ),
+            ),
+
+            const SizedBox(height: 32),
+
+            // Height measurement card
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(22),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(22),
+                border: Border.all(color: const Color(0xFFE5E3DA)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.04),
+                    blurRadius: 18,
+                    offset: const Offset(0, 7),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  // Measurement icon
+                  Container(
+                    width: 62,
+                    height: 62,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFE8EFE0),
+                      borderRadius: BorderRadius.circular(19),
+                    ),
+                    child: const Icon(
+                      Icons.height_rounded,
+                      color: Color(0xFF27613C),
+                      size: 32,
+                    ),
+                  ),
+
+                  const SizedBox(height: 18),
+
+                  const Text(
+                    'Height',
+                    style: TextStyle(
+                      color: Color(0xFF193A26),
+                      fontSize: 17,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+
+                  const SizedBox(height: 5),
+
+                  Text(
+                    'Enter your height in centimeters',
+                    style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  TextField(
+                    controller: _heightController,
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Color(0xFF193A26),
+                      fontSize: 30,
+                      fontWeight: FontWeight.w800,
+                    ),
+                    decoration: InputDecoration(
+                      hintText: '170',
+                      hintStyle: TextStyle(
+                        color: Colors.grey.shade300,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w700,
+                      ),
+                      suffixText: 'cm',
+                      suffixStyle: const TextStyle(
+                        color: Color(0xFF777777),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                      ),
+                      filled: true,
+                      fillColor: const Color(0xFFF8F7F1),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 18,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(17),
+                        borderSide: BorderSide.none,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(17),
+                        borderSide: BorderSide.none,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(17),
+                        borderSide: const BorderSide(
+                          color: Color(0xFF27613C),
+                          width: 1.5,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 18),
+
+            // Helpful note
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: const Color(0xFFE8EFE0).withValues(alpha: 0.65),
+                borderRadius: BorderRadius.circular(17),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(
+                    Icons.info_outline_rounded,
+                    color: Color(0xFF27613C),
+                    size: 20,
+                  ),
+                  const SizedBox(width: 11),
+                  Expanded(
+                    child: Text(
+                      'For the most accurate result, enter your '
+                      'height without shoes.',
+                      style: TextStyle(
+                        color: Colors.grey.shade700,
+                        fontSize: 12.5,
+                        height: 1.4,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -382,15 +1212,181 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _questionTitle(
-              title: "What's your weight?",
-              subtitle: 'Enter your current weight in kilograms.',
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+              decoration: BoxDecoration(
+                color: const Color(0xFFE8EFE0),
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: const Text(
+                'STEP 4 OF 8',
+                style: TextStyle(
+                  color: Color(0xFF27613C),
+                  fontSize: 11,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 1.1,
+                ),
+              ),
             ),
-            _textField(
-              controller: _weightController,
-              hintText: 'Weight in kg',
-              keyboardType: const TextInputType.numberWithOptions(
-                decimal: true,
+
+            const SizedBox(height: 22),
+
+            const Text(
+              "What's your weight?",
+              style: TextStyle(
+                color: Color(0xFF193A26),
+                fontSize: 32,
+                fontWeight: FontWeight.w800,
+                height: 1.15,
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
+            Text(
+              'Your current weight helps us calculate your '
+              'nutrition targets and track your progress.',
+              style: TextStyle(
+                color: Colors.grey.shade600,
+                fontSize: 15,
+                height: 1.5,
+              ),
+            ),
+
+            const SizedBox(height: 32),
+
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(22),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(22),
+                border: Border.all(color: const Color(0xFFE5E3DA)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.04),
+                    blurRadius: 18,
+                    offset: const Offset(0, 7),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    width: 62,
+                    height: 62,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFE8EFE0),
+                      borderRadius: BorderRadius.circular(19),
+                    ),
+                    child: const Icon(
+                      Icons.monitor_weight_outlined,
+                      color: Color(0xFF27613C),
+                      size: 32,
+                    ),
+                  ),
+
+                  const SizedBox(height: 18),
+
+                  const Text(
+                    'Current weight',
+                    style: TextStyle(
+                      color: Color(0xFF193A26),
+                      fontSize: 17,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+
+                  const SizedBox(height: 5),
+
+                  Text(
+                    'Enter your weight in kilograms',
+                    style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  TextField(
+                    controller: _weightController,
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Color(0xFF193A26),
+                      fontSize: 30,
+                      fontWeight: FontWeight.w800,
+                    ),
+                    decoration: InputDecoration(
+                      hintText: '60',
+                      hintStyle: TextStyle(
+                        color: Colors.grey.shade300,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w700,
+                      ),
+                      suffixText: 'kg',
+                      suffixStyle: const TextStyle(
+                        color: Color(0xFF777777),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                      ),
+                      filled: true,
+                      fillColor: const Color(0xFFF8F7F1),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 18,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(17),
+                        borderSide: BorderSide.none,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(17),
+                        borderSide: BorderSide.none,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(17),
+                        borderSide: const BorderSide(
+                          color: Color(0xFF27613C),
+                          width: 1.5,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 18),
+
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: const Color(0xFFE8EFE0).withValues(alpha: 0.65),
+                borderRadius: BorderRadius.circular(17),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(
+                    Icons.favorite_border_rounded,
+                    color: Color(0xFF27613C),
+                    size: 20,
+                  ),
+                  const SizedBox(width: 11),
+                  Expanded(
+                    child: Text(
+                      'Use your current weight for the most '
+                      'accurate nutrition recommendations.',
+                      style: TextStyle(
+                        color: Colors.grey.shade700,
+                        fontSize: 12.5,
+                        height: 1.4,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -400,30 +1396,116 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _questionTitle(
-              title: 'How active are you?',
-              subtitle:
-                  'Choose the option that best describes your usual activity.',
+            // Step label
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+              decoration: BoxDecoration(
+                color: const Color(0xFFE8EFE0),
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: const Text(
+                'STEP 5 OF 8',
+                style: TextStyle(
+                  color: Color(0xFF27613C),
+                  fontSize: 11,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 1.1,
+                ),
+              ),
             ),
-            _optionButton(
+
+            const SizedBox(height: 22),
+
+            const Text(
+              'How active are you?',
+              style: TextStyle(
+                color: Color(0xFF193A26),
+                fontSize: 32,
+                fontWeight: FontWeight.w800,
+                height: 1.15,
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
+            Text(
+              'Choose the option that best describes your usual '
+              'daily activity and exercise routine.',
+              style: TextStyle(
+                color: Colors.grey.shade600,
+                fontSize: 15,
+                height: 1.5,
+              ),
+            ),
+
+            const SizedBox(height: 28),
+
+            _activityOption(
+              icon: Icons.event_seat_rounded,
               title: 'Sedentary',
-              selected: _activityLevel == 'Sedentary',
-              onTap: () => setState(() => _activityLevel = 'Sedentary'),
+              subtitle: 'Little to no regular exercise',
+              value: 'Sedentary',
             ),
-            _optionButton(
+
+            const SizedBox(height: 12),
+
+            _activityOption(
+              icon: Icons.directions_walk_rounded,
               title: 'Lightly Active',
-              selected: _activityLevel == 'Lightly Active',
-              onTap: () => setState(() => _activityLevel = 'Lightly Active'),
+              subtitle: 'Light exercise or walking 1–3 days/week',
+              value: 'Lightly Active',
             ),
-            _optionButton(
+
+            const SizedBox(height: 12),
+
+            _activityOption(
+              icon: Icons.directions_run_rounded,
               title: 'Moderately Active',
-              selected: _activityLevel == 'Moderately Active',
-              onTap: () => setState(() => _activityLevel = 'Moderately Active'),
+              subtitle: 'Moderate exercise 3–5 days/week',
+              value: 'Moderately Active',
             ),
-            _optionButton(
+
+            const SizedBox(height: 12),
+
+            _activityOption(
+              icon: Icons.fitness_center_rounded,
               title: 'Very Active',
-              selected: _activityLevel == 'Very Active',
-              onTap: () => setState(() => _activityLevel = 'Very Active'),
+              subtitle: 'Hard exercise or intense activity 6–7 days/week',
+              value: 'Very Active',
+            ),
+
+            const SizedBox(height: 18),
+
+            // Helpful note
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: const Color(0xFFE8EFE0).withValues(alpha: 0.65),
+                borderRadius: BorderRadius.circular(17),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(
+                    Icons.tips_and_updates_outlined,
+                    color: Color(0xFF27613C),
+                    size: 20,
+                  ),
+                  const SizedBox(width: 11),
+                  Expanded(
+                    child: Text(
+                      'Choose the option that matches your normal '
+                      'routine, not an unusually active day.',
+                      style: TextStyle(
+                        color: Colors.grey.shade700,
+                        fontSize: 12.5,
+                        height: 1.4,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         );
@@ -432,29 +1514,117 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _questionTitle(
-              title: "What's your goal?",
-              subtitle: 'Your goal helps us create a suitable nutrition plan.',
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+              decoration: BoxDecoration(
+                color: const Color(0xFFE8EFE0),
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: const Text(
+                'STEP 6 OF 8',
+                style: TextStyle(
+                  color: Color(0xFF27613C),
+                  fontSize: 11,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 1.1,
+                ),
+              ),
             ),
-            _optionButton(
+
+            const SizedBox(height: 22),
+
+            const Text(
+              "What's your goal?",
+              style: TextStyle(
+                color: Color(0xFF193A26),
+                fontSize: 32,
+                fontWeight: FontWeight.w800,
+                height: 1.15,
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
+            Text(
+              'Tell us what you want to achieve so we can '
+              'shape your nutrition plan around it.',
+              style: TextStyle(
+                color: Colors.grey.shade600,
+                fontSize: 15,
+                height: 1.5,
+              ),
+            ),
+
+            const SizedBox(height: 28),
+
+            _goalOption(
+              icon: Icons.trending_down_rounded,
               title: 'Lose Weight',
-              selected: _goal == 'Lose Weight',
-              onTap: () => setState(() => _goal = 'Lose Weight'),
+              subtitle:
+                  'A balanced calorie-controlled plan for weight management',
+              value: 'Lose Weight',
             ),
-            _optionButton(
+
+            const SizedBox(height: 12),
+
+            _goalOption(
+              icon: Icons.balance_rounded,
               title: 'Maintain Weight',
-              selected: _goal == 'Maintain Weight',
-              onTap: () => setState(() => _goal = 'Maintain Weight'),
+              subtitle:
+                  'Keep your current weight with balanced daily nutrition',
+              value: 'Maintain Weight',
             ),
-            _optionButton(
+
+            const SizedBox(height: 12),
+
+            _goalOption(
+              icon: Icons.trending_up_rounded,
               title: 'Gain Weight',
-              selected: _goal == 'Gain Weight',
-              onTap: () => setState(() => _goal = 'Gain Weight'),
+              subtitle: 'A higher-energy plan to support healthy weight gain',
+              value: 'Gain Weight',
             ),
-            _optionButton(
+
+            const SizedBox(height: 12),
+
+            _goalOption(
+              icon: Icons.fitness_center_rounded,
               title: 'Build Muscle',
-              selected: _goal == 'Build Muscle',
-              onTap: () => setState(() => _goal = 'Build Muscle'),
+              subtitle:
+                  'Protein-focused nutrition to support muscle development',
+              value: 'Build Muscle',
+            ),
+
+            const SizedBox(height: 18),
+
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: const Color(0xFFE8EFE0).withValues(alpha: 0.65),
+                borderRadius: BorderRadius.circular(17),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(
+                    Icons.auto_awesome_outlined,
+                    color: Color(0xFF27613C),
+                    size: 20,
+                  ),
+                  const SizedBox(width: 11),
+                  Expanded(
+                    child: Text(
+                      'Your goal will influence your daily calorie '
+                      'and nutrition targets.',
+                      style: TextStyle(
+                        color: Colors.grey.shade700,
+                        fontSize: 12.5,
+                        height: 1.4,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         );
@@ -463,55 +1633,307 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _questionTitle(
-              title: "What's your diet preference?",
-              subtitle: 'Choose the type of diet you usually follow.',
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+              decoration: BoxDecoration(
+                color: const Color(0xFFE8EFE0),
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: const Text(
+                'STEP 7 OF 8',
+                style: TextStyle(
+                  color: Color(0xFF27613C),
+                  fontSize: 11,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 1.1,
+                ),
+              ),
             ),
-            _optionButton(
+
+            const SizedBox(height: 22),
+
+            const Text(
+              'What do you prefer to eat?',
+              style: TextStyle(
+                color: Color(0xFF193A26),
+                fontSize: 32,
+                fontWeight: FontWeight.w800,
+                height: 1.15,
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
+            Text(
+              'Choose the eating style that best matches '
+              'your everyday food preferences.',
+              style: TextStyle(
+                color: Colors.grey.shade600,
+                fontSize: 15,
+                height: 1.5,
+              ),
+            ),
+
+            const SizedBox(height: 28),
+
+            _dietOption(
+              icon: Icons.eco_rounded,
               title: 'Vegetarian',
-              selected: _dietPreference == 'Vegetarian',
-              onTap: () => setState(() => _dietPreference = 'Vegetarian'),
+              subtitle:
+                  'Plant-based foods with dairy and other vegetarian options',
+              value: 'Vegetarian',
             ),
-            _optionButton(
+
+            const SizedBox(height: 12),
+
+            _dietOption(
+              icon: Icons.restaurant_rounded,
               title: 'Non-Vegetarian',
-              selected: _dietPreference == 'Non-Vegetarian',
-              onTap: () => setState(() => _dietPreference = 'Non-Vegetarian'),
+              subtitle: 'Includes meat, poultry or seafood',
+              value: 'Non-Vegetarian',
             ),
-            _optionButton(
+
+            const SizedBox(height: 12),
+
+            _dietOption(
+              icon: Icons.spa_rounded,
               title: 'Vegan',
-              selected: _dietPreference == 'Vegan',
-              onTap: () => setState(() => _dietPreference = 'Vegan'),
+              subtitle: 'Fully plant-based food choices',
+              value: 'Vegan',
             ),
-            _optionButton(
+
+            const SizedBox(height: 12),
+
+            _dietOption(
+              icon: Icons.egg_alt_rounded,
               title: 'Eggetarian',
-              selected: _dietPreference == 'Eggetarian',
-              onTap: () => setState(() => _dietPreference = 'Eggetarian'),
+              subtitle: 'Vegetarian foods with eggs',
+              value: 'Eggetarian',
+            ),
+
+            const SizedBox(height: 18),
+
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: const Color(0xFFE8EFE0).withValues(alpha: 0.65),
+                borderRadius: BorderRadius.circular(17),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(
+                    Icons.restaurant_menu_rounded,
+                    color: Color(0xFF27613C),
+                    size: 20,
+                  ),
+                  const SizedBox(width: 11),
+                  Expanded(
+                    child: Text(
+                      'Your preference will be used when selecting '
+                      'foods and creating your meal recommendations.',
+                      style: TextStyle(
+                        color: Colors.grey.shade700,
+                        fontSize: 12.5,
+                        height: 1.4,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         );
-
       case 7:
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _questionTitle(
-              title: 'Any allergies or restrictions?',
-              subtitle:
-                  'Tell us about foods you cannot or prefer not to eat. This is optional.',
+            // Step label
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+              decoration: BoxDecoration(
+                color: const Color(0xFFE8EFE0),
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: const Text(
+                'STEP 8 OF 8',
+                style: TextStyle(
+                  color: Color(0xFF27613C),
+                  fontSize: 11,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 1.1,
+                ),
+              ),
             ),
-            _textField(
-              controller: _allergiesController,
-              hintText: 'e.g. Peanuts, lactose',
-              keyboardType: TextInputType.text,
+
+            const SizedBox(height: 22),
+
+            const Text(
+              'Any allergies or restrictions?',
+              style: TextStyle(
+                color: Color(0xFF193A26),
+                fontSize: 32,
+                fontWeight: FontWeight.w800,
+                height: 1.15,
+              ),
             ),
-            const SizedBox(height: 12),
+
+            const SizedBox(height: 10),
+
             Text(
-              'You can write "None" if you have no restrictions.',
-              style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
+              'Tell us about foods you cannot eat or prefer '
+              'to avoid so we can keep your recommendations safe.',
+              style: TextStyle(
+                color: Colors.grey.shade600,
+                fontSize: 15,
+                height: 1.5,
+              ),
+            ),
+
+            const SizedBox(height: 28),
+
+            // Allergy input card
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(22),
+                border: Border.all(color: const Color(0xFFE5E3DA)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.04),
+                    blurRadius: 18,
+                    offset: const Offset(0, 7),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFE8EFE0),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: const Icon(
+                          Icons.health_and_safety_outlined,
+                          color: Color(0xFF27613C),
+                          size: 24,
+                        ),
+                      ),
+
+                      const SizedBox(width: 14),
+
+                      const Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Food allergies & restrictions',
+                              style: TextStyle(
+                                color: Color(0xFF193A26),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                            SizedBox(height: 3),
+                            Text(
+                              'Optional',
+                              style: TextStyle(
+                                color: Color(0xFF777777),
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  TextField(
+                    controller: _allergiesController,
+                    keyboardType: TextInputType.text,
+                    maxLines: 4,
+                    textCapitalization: TextCapitalization.sentences,
+                    style: const TextStyle(
+                      color: Color(0xFF193A26),
+                      fontSize: 15,
+                      height: 1.4,
+                    ),
+                    decoration: InputDecoration(
+                      hintText: 'e.g. peanuts, lactose, shellfish...',
+                      hintStyle: TextStyle(
+                        color: Colors.grey.shade400,
+                        fontSize: 14,
+                      ),
+                      filled: true,
+                      fillColor: const Color(0xFFF8F7F1),
+                      alignLabelWithHint: true,
+                      contentPadding: const EdgeInsets.all(16),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(17),
+                        borderSide: BorderSide.none,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(17),
+                        borderSide: BorderSide.none,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(17),
+                        borderSide: const BorderSide(
+                          color: Color(0xFF27613C),
+                          width: 1.5,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 18),
+
+            // Safety note
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: const Color(0xFFE8EFE0).withValues(alpha: 0.65),
+                borderRadius: BorderRadius.circular(17),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(
+                    Icons.shield_outlined,
+                    color: Color(0xFF27613C),
+                    size: 20,
+                  ),
+                  const SizedBox(width: 11),
+                  Expanded(
+                    child: Text(
+                      'Mention any food allergies or important '
+                      'restrictions. You can leave this blank if none apply.',
+                      style: TextStyle(
+                        color: Colors.grey.shade700,
+                        fontSize: 12.5,
+                        height: 1.4,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         );
-
       default:
         return const SizedBox();
     }
