@@ -21,6 +21,8 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
   final TextEditingController _heightController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
   final TextEditingController _allergiesController = TextEditingController();
+  final TextEditingController _healthConditionsController =
+      TextEditingController();
 
   // Selected answers
   String? _gender;
@@ -28,7 +30,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
   String? _goal;
   String? _dietPreference;
 
-  final int _totalQuestions = 8;
+  final int _totalQuestions = 9;
 
   @override
   void dispose() {
@@ -37,6 +39,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
     _heightController.dispose();
     _weightController.dispose();
     _allergiesController.dispose();
+    _healthConditionsController.dispose();
     super.dispose();
   }
 
@@ -164,13 +167,6 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
       goal: _goal!,
     );
 
-    // Show loading dialog
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => const Center(child: CircularProgressIndicator()),
-    );
-
     try {
       await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
         // Questionnaire information
@@ -184,7 +180,6 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
         'allergies': _allergiesController.text.trim().isEmpty
             ? 'None'
             : _allergiesController.text.trim(),
-
         // Personalized nutrition calculations
         'bmr': nutrition.bmr,
         'tdee': nutrition.tdee,
@@ -200,9 +195,6 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
 
       if (!mounted) return;
 
-      // Close loading dialog
-      Navigator.of(context).pop();
-
       // Go to dashboard
       Navigator.pushAndRemoveUntil(
         context,
@@ -211,9 +203,6 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
       );
     } catch (e) {
       if (!mounted) return;
-
-      // Close loading dialog
-      Navigator.of(context).pop();
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Could not save your information: $e')),
@@ -1930,6 +1919,96 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
                     ),
                   ),
                 ],
+              ),
+            ),
+          ],
+        );
+      case 8:
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+              decoration: BoxDecoration(
+                color: const Color(0xFFE8EFE0),
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: const Text(
+                'STEP 9 OF 9',
+                style: TextStyle(
+                  color: Color(0xFF27613C),
+                  fontSize: 11,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 1.1,
+                ),
+              ),
+            ),
+            const SizedBox(height: 22),
+            const Text(
+              'Any health conditions we should know about?',
+              style: TextStyle(
+                color: Color(0xFF193A26),
+                fontSize: 30,
+                fontWeight: FontWeight.w800,
+                height: 1.15,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              'Share any relevant health conditions or dietary '
+              'instructions so the assistant can tailor its general '
+              'food suggestions more carefully.',
+              style: TextStyle(
+                color: Colors.grey.shade600,
+                fontSize: 15,
+                height: 1.5,
+              ),
+            ),
+            const SizedBox(height: 24),
+            TextField(
+              controller: _healthConditionsController,
+              maxLines: 4,
+              textCapitalization: TextCapitalization.sentences,
+              style: const TextStyle(color: Color(0xFF193A26), fontSize: 15),
+              decoration: InputDecoration(
+                hintText: 'e.g. diabetes, high blood pressure, or none',
+                filled: true,
+                fillColor: const Color(0xFFF8F7F1),
+                alignLabelWithHint: true,
+                contentPadding: const EdgeInsets.all(16),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(17),
+                  borderSide: BorderSide.none,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(17),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(17),
+                  borderSide: const BorderSide(
+                    color: Color(0xFF27613C),
+                    width: 1.5,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: const Color(0xFFE8EFE0).withValues(alpha: 0.65),
+                borderRadius: BorderRadius.circular(17),
+              ),
+              child: const Text(
+                'Optional. Your AI assistant provides general '
+                'nutrition information, not medical diagnosis or '
+                'treatment advice.',
+                style: TextStyle(
+                  color: Color(0xFF555555),
+                  fontSize: 12.5,
+                  height: 1.4,
+                ),
               ),
             ),
           ],

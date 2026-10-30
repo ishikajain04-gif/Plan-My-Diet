@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../questionnaire/questionnaire_screen.dart';
+import 'login_screen.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -71,11 +73,11 @@ class _SignupScreenState extends State<SignupScreen> {
 
       _showMessage('Account created successfully! 🎉');
 
-      // 4. New user goes to questionnaire
-      // We will connect your actual questionnaire screen here next.
-      //
-      // For now, this takes us back to Login.
-      Navigator.pop(context);
+      // 4. New user goes directly to questionnaire
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const QuestionnaireScreen()),
+      );
     } on FirebaseAuthException catch (e) {
       String message;
 
@@ -236,7 +238,10 @@ class _SignupScreenState extends State<SignupScreen> {
               Center(
                 child: TextButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (_) => const LoginScreen()),
+                    );
                   },
                   child: const Text.rich(
                     TextSpan(

@@ -65,7 +65,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             // ======================================================
             // CURRENT SCREEN
             // ======================================================
-            Positioned.fill(child: _screens[_currentIndex]),
+            // Positioned.fill(child: _screens[_currentIndex]),
+            // KEEP ALL SCREENS ALIVE WHEN SWITCHING TABS
+            Positioned.fill(
+              child: IndexedStack(index: _currentIndex, children: _screens),
+            ),
 
             // ======================================================
             // FLOATING BOTTOM NAVIGATION
